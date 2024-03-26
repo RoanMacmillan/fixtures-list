@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 const FixtureList = ({ leagueId }) => {
   const [fixtureData, setFixtureData] = useState(null);
@@ -8,7 +9,7 @@ const FixtureList = ({ leagueId }) => {
       try {
         const currentDate = new Date().toISOString().split("T")[0];
 
-        const url = `https://api-football-v1.p.rapidapi.com/v3/fixtures/?date=2024-03-16&season=2023&league=${leagueId}`;
+        const url = `https://api-football-v1.p.rapidapi.com/v3/fixtures/?date=2024-03-30&season=2023&league=${leagueId}`;
         const options = {
           method: "GET",
           headers: {
@@ -16,11 +17,11 @@ const FixtureList = ({ leagueId }) => {
             "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com",
           },
         };
-        
+
 
         const response = await fetch(url, options);
         const data = await response.json();
-        console.log(data.response);
+        // console.log(data.response);
         const sortedFixtureData = data.response.sort((a, b) =>
           a.fixture.date.localeCompare(b.fixture.date)
         );
@@ -68,21 +69,20 @@ const FixtureList = ({ leagueId }) => {
           <div className="h-[1px] w-full bg-gray-300 flex-1"></div>
 
           <ul className="mt-6">
-            {fixtureData.map((fixture, index) => (
-
+            {fixtureData.map((fixture) => (
+                <Link href={`/fixtures/${fixture.fixture.id}`} key={fixture.fixture.id}>
 
               <li
-                className={`flex bg-white items-center relative overflow-scroll hover:cursor-pointer group sm:overflow-auto py-6 shadow-sm rounded-sm gap-2 mb-3 sm:py-9 sm:mb-5 sm:gap-4
+                className={`flex bg-white items-center relative overflow-scroll hover:cursor-pointer group sm:overflow-auto py-6 shadow-sm rounded-sm gap-1 mb-3 sm:py-9 sm:mb-5 sm:gap-4
                 
                 ${fixture.fixture.status.short === 'PST' ? 'hidden' : ''}
                 
                 `}
-                key={index}
               >
-                <div className=" flex w-full justify-end items-center gap-2 sm:gap-3">
-                  <div className="text-sm font-semibold text-right text-gray-800 sm:text-lg group-hover:underline">
+                <div className=" flex w-full justify-end items-center gap-1 sm:gap-3">
+                  <p className="text-sm font-semibold text-right text-gray-800 sm:text-lg group-hover:underline">
                     {fixture.teams.home.name}
-                  </div>
+                  </p>
                   <div className="w-[24px] sm:w-[28px]">
                     <img
                       className="w-full"
@@ -104,7 +104,7 @@ const FixtureList = ({ leagueId }) => {
                   
 
 
-                <div className="flex w-full items-center gap-2 sm:gap-3">
+                <div className="flex w-full items-center gap-1 sm:gap-3">
                   <div className="w-[24px] sm:w-[28px]">
                     <img
                       className="w-full"
@@ -112,13 +112,13 @@ const FixtureList = ({ leagueId }) => {
                       src={fixture.teams.away.logo}
                     ></img>
                   </div>
-                  <div className="text-sm font-semibold text-gray-800 sm:text-lg group-hover:underline">
+                  <p className="text-sm font-semibold text-gray-800 sm:text-lg group-hover:underline">
                     {fixture.teams.away.name} 
-                  </div>
+                  </p>
                 </div>
               </li>
 
-
+              </Link>
 
 
 

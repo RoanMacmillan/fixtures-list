@@ -12,12 +12,19 @@ const FixturePage = () => {
     const fetchData = async () => {
       try {
         const url = `https://api-football-v1.p.rapidapi.com/v3/fixtures?id=${id}`;
-        const options = {
+        const apiKey = process.env.NEXT_PUBLIC_REACT_APP_API_KEY;
+
+        const headers: HeadersInit = {
+          "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com",
+        };
+
+        if (apiKey) {
+          headers["X-RapidAPI-Key"] = apiKey;
+        }
+
+        const options: RequestInit = {
           method: "GET",
-          headers: {
-            "X-RapidAPI-Key": process.env.NEXT_PUBLIC_REACT_APP_API_KEY,
-            "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com",
-          },
+          headers,
         };
 
         const response = await fetch(url, options);

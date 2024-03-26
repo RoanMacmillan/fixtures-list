@@ -1,8 +1,40 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
-const FixtureList = ({ leagueId }) => {
-  const [fixtureData, setFixtureData] = useState(null);
+interface Fixture {
+  fixture: {
+    id: number;
+    date: string;
+    status: {
+      short: string;
+    };
+  };
+  league: {
+    logo: string;
+    name: string;
+  };
+  teams: {
+    home: {
+      name: string;
+      logo: string;
+    };
+    away: {
+      name: string;
+      logo: string;
+    };
+  };
+  goals: {
+    home: number;
+    away: number;
+  };
+}
+
+interface FixtureListProps {
+  leagueId: number; // Change the type as per your requirement
+}
+
+const FixtureList = ({ leagueId }: FixtureListProps) => {
+  const [fixtureData, setFixtureData] = useState<Fixture[] | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -10,17 +42,23 @@ const FixtureList = ({ leagueId }) => {
         const currentDate = new Date().toISOString().split("T")[0];
 
         const url = `https://api-football-v1.p.rapidapi.com/v3/fixtures/?date=2024-03-30&season=2023&league=${leagueId}`;
-        const options = {
-          method: "GET",
-          headers: {
-              "X-RapidAPI-Key": process.env.NEXT_PUBLIC_REACT_APP_API_KEY,
-            "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com",
-          },
+        const apiKey = process.env.NEXT_PUBLIC_REACT_APP_API_KEY;
+
+        const headers: HeadersInit = {
+          "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com",
         };
 
+        if (apiKey) {
+          headers["X-RapidAPI-Key"] = apiKey;
+        }
+
+        const options: RequestInit = {
+          method: "GET",
+          headers,
+        };
 
         const response = await fetch(url, options);
-        const data = await response.json();
+        const data: { response: Fixture[] } = await response.json();
         // console.log(data.response);
         const sortedFixtureData = data.response.sort((a, b) =>
           a.fixture.date.localeCompare(b.fixture.date)
@@ -35,7 +73,7 @@ const FixtureList = ({ leagueId }) => {
     fetchData();
   }, [leagueId]);
 
-  const formatKickOffTime = (dateTimeString) => {
+  const formatKickOffTime = (dateTimeString: string): string => {
     const date = new Date(dateTimeString);
     const hours = date.getHours();
     const minutes = date.getMinutes();
@@ -70,58 +108,76 @@ const FixtureList = ({ leagueId }) => {
 
           <ul className="mt-6">
             {fixtureData.map((fixture) => (
-                <Link href={`/fixtures/${fixture.fixture.id}`} key={fixture.fixture.id}>
-
-              <li
-                className={`flex bg-white items-center relative overflow-scroll hover:cursor-pointer group sm:overflow-auto py-6 shadow-sm rounded-sm gap-1 mb-3 sm:py-9 sm:mb-5 sm:gap-4
+              <Link
+                href={`/fixtures/${fixture.fixture.id}`}
+                key={fixture.fixture.id}
+              >
+                <li
+                  className={`flex bg-white items-center relative overflow-scroll hover:cursor-pointer group sm:overflow-auto py-6 shadow-sm rounded-sm gap-1 mb-3 sm:py-9 sm:mb-5 sm:gap-4
                 
-                ${fixture.fixture.status.short === 'PST' ? 'hidden' : ''}
+                ${fixture.fixture.status.short === "PST" ? "hidden" : ""}
                 
                 `}
-              >
-                <div className=" flex w-full justify-end items-center gap-1 sm:gap-3">
-                  <p className="text-sm font-semibold text-right text-gray-800 sm:text-lg group-hover:underline">
-                    {fixture.teams.home.name}
-                  </p>
-                  <div className="w-[24px] sm:w-[28px]">
-                    <img
-                      className="w-full"
-                      alt={fixture.teams.home.name}
-                      src={fixture.teams.home.logo}
-                    ></img>
+                >
+                  <div className=" flex w-full justify-end items-center gap-1 sm:gap-3">
+                    <p className="text-sm font-semibold text-right text-gray-800 sm:text-lg group-hover:underline">
+                      {fixture.teams.home.name}
+                    </p>
+                    <div className="w-[24px] sm:w-[28px]">
+                      <img
+                        className="w-full"
+                        alt={fixture.teams.home.name}
+                        src={fixture.teams.home.logo}
+                      ></img>
+                    </div>
                   </div>
-                </div>
 
-
-                <div className="flex gap-[2px] relative">
-                <div className={`${fixture.fixture.status.short === 'NS' ? 'bg-slate-200 text-black' : 'text-white bg-slate-700'} rounded-sm shadow-sm  w-8 font-semibold flex items-center justify-center h-10 sm:font-bold sm:w-10 sm:h-12`}>{fixture.fixture.status.short === "HT" || fixture.fixture.status.short === "FT" ? fixture.goals.home : '-'}</div>
-                <div className={`${fixture.fixture.status.short === 'NS' ? 'bg-slate-200 text-black' : 'text-white bg-slate-700'} rounded-sm shadow-sm  w-8 font-semibold flex items-center justify-center h-10 sm:font-bold sm:w-10 sm:h-12`}>{fixture.fixture.status.short === "HT" || fixture.fixture.status.short === "FT" ? fixture.goals.away : '-'}</div>
-                <div className="text-xs text-gray-600 sm:text-sm absolute inset-0 top-[52px] sm:top-[65px] w-full flex items-center justify-center">
-                  {fixture.fixture.status.short === 'NS' ? formatKickOffTime(fixture.fixture.date) : fixture.fixture.status.short}
-                </div>
-                </div>
-
-                  
-
-
-                <div className="flex w-full items-center gap-1 sm:gap-3">
-                  <div className="w-[24px] sm:w-[28px]">
-                    <img
-                      className="w-full"
-                      alt={fixture.teams.away.name}
-                      src={fixture.teams.away.logo}
-                    ></img>
+                  <div className="flex gap-[2px] relative">
+                    <div
+                      className={`${
+                        fixture.fixture.status.short === "NS"
+                          ? "bg-slate-200 text-black"
+                          : "text-white bg-slate-700"
+                      } rounded-sm shadow-sm  w-8 font-semibold flex items-center justify-center h-10 sm:font-bold sm:w-10 sm:h-12`}
+                    >
+                      {fixture.fixture.status.short === "HT" ||
+                      fixture.fixture.status.short === "FT"
+                        ? fixture.goals.home
+                        : "-"}
+                    </div>
+                    <div
+                      className={`${
+                        fixture.fixture.status.short === "NS"
+                          ? "bg-slate-200 text-black"
+                          : "text-white bg-slate-700"
+                      } rounded-sm shadow-sm  w-8 font-semibold flex items-center justify-center h-10 sm:font-bold sm:w-10 sm:h-12`}
+                    >
+                      {fixture.fixture.status.short === "HT" ||
+                      fixture.fixture.status.short === "FT"
+                        ? fixture.goals.away
+                        : "-"}
+                    </div>
+                    <div className="text-xs text-gray-600 sm:text-sm absolute inset-0 top-[52px] sm:top-[65px] w-full flex items-center justify-center">
+                      {fixture.fixture.status.short === "NS"
+                        ? formatKickOffTime(fixture.fixture.date)
+                        : fixture.fixture.status.short}
+                    </div>
                   </div>
-                  <p className="text-sm font-semibold text-gray-800 sm:text-lg group-hover:underline">
-                    {fixture.teams.away.name} 
-                  </p>
-                </div>
-              </li>
 
+                  <div className="flex w-full items-center gap-1 sm:gap-3">
+                    <div className="w-[24px] sm:w-[28px]">
+                      <img
+                        className="w-full"
+                        alt={fixture.teams.away.name}
+                        src={fixture.teams.away.logo}
+                      ></img>
+                    </div>
+                    <p className="text-sm font-semibold text-gray-800 sm:text-lg group-hover:underline">
+                      {fixture.teams.away.name}
+                    </p>
+                  </div>
+                </li>
               </Link>
-
-
-
             ))}
           </ul>
         </div>

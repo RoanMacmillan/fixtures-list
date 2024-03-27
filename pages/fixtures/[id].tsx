@@ -8,46 +8,46 @@ const FixturePage = () => {
 
   const [matchData, setMatchData] = useState(null);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const url = `https://api-football-v1.p.rapidapi.com/v3/fixtures?id=${id}`;
-        const apiKey = process.env.NEXT_PUBLIC_REACT_APP_API_KEY;
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       try {
+//         const url = `https://api-football-v1.p.rapidapi.com/v3/fixtures?id=${id}`;
+//         const apiKey = process.env.NEXT_PUBLIC_REACT_APP_API_KEY;
 
-        const headers: HeadersInit = {
-          "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com",
-        };
+//         const headers: HeadersInit = {
+//           "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com",
+//         };
 
-        if (apiKey) {
-          headers["X-RapidAPI-Key"] = apiKey;
-        }
+//         if (apiKey) {
+//           headers["X-RapidAPI-Key"] = apiKey;
+//         }
 
-        const options: RequestInit = {
-          method: "GET",
-          headers,
-        };
+//         const options: RequestInit = {
+//           method: "GET",
+//           headers,
+//         };
 
-        const response = await fetch(url, options);
+//         const response = await fetch(url, options);
 
-        const data = await response.json();
+//         const data = await response.json();
 
-        setMatchData(data);
+//         setMatchData(data);
 
-        console.log(data.response);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+//         console.log(data.response);
+//       } catch (error) {
+//         console.error("Error fetching data:", error);
+//       }
+//     };
 
-    fetchData();
+//     fetchData();
 
-  }, [id]);
+//   }, [id]);
 
-  if (!matchData) {
+//   if (!matchData) {
 
-    return <p>Loading...</p>;
+//     return <p>Loading...</p>;
 
-  }
+//   }
 
   return <div className="">
 

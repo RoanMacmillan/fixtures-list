@@ -2,4 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+.outline1 {
 
+
+    outline: solid 1px slategrey;
+
+}
+
+
+.custom-btn {
+
+    filter: brightness(0) invert(1);
+}

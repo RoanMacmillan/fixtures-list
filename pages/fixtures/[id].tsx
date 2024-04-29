@@ -1,6 +1,7 @@
 // [id].js (Dynamic Fixture Page)
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import Layout from "@/components/layout";
 
 const FixturePage = () => {
   const router = useRouter();
@@ -49,11 +50,79 @@ const FixturePage = () => {
 
 //   }
 
-  return <div className="">
+  return <div className='max-w-4xl w-full px-4 sm:px-8'>
+
+    <div className="bg-white rounded-sm shadow-sm">
+
+    <div className="flex justify-evenly items-center py-6">
+    <div className="flex flex-col items-center">
+
+    <div className="w-[50px] h-[50px] outline-slate-300 outline rounded-sm "></div>
+    <p className="font-semibold text-slate-800 sm:font-bold mt-2">United FC</p>
+
+
+    </div>
+
+
+    <div className="flex flex-col items-center">
+    {/* <p className="text-xs text-gray-600 sm:text-sm">27.03.2024 00:00</p> */}
+    <div className="flex gap-[1px]">
+    <div className="rounded-sm shadow-sm  w-8 font-semibold flex items-center justify-center h-10 sm:font-bold sm:w-10 sm:h-12 text-white bg-slate-700">
+    <p>14</p>
+    </div>
+    <div className="rounded-sm shadow-sm  w-8 font-semibold flex items-center justify-center h-10 sm:font-bold sm:w-10 sm:h-12 text-white bg-slate-700">
+    <p>0</p>
+    </div>
+    </div>
+    <p className="text-xs text-gray-600 sm:text-sm mt-2">Finished</p>
+
+
+    </div>
+
+    <div className="flex flex-col items-center">
+
+<div className="w-[50px] h-[50px] outline-slate-300 outline rounded-sm "></div>
+<p className="font-semibold text-slate-800 sm:font-bold mt-2">City FC</p>
+
+
+</div>
+
+
+    </div>
 
 
 
-  </div>;
+  </div>
+
+  <h1 className=" mt-4 font-bold uppercase tracking-normal text-slate-700 sm:text-lg">Highlights</h1>
+  <div className="mt-4 h-[1px] w-full bg-gray-300"></div>
+
+
+
+<div className="bg-white rounded-sm shadow-sm mt-3 p-3">
+<h2 className="font-semibold uppercase text-xs text-slate-500">Scorers</h2>
+<div className="h-[1px] w-full bg-gray-300"></div>
+
+
+<h2 className="font-semibold uppercase text-xs text-slate-500">Cards</h2>
+<div className="h-[1px] w-full bg-gray-300"></div>
+
+<h2 className="font-semibold uppercase text-xs text-slate-500">Substitutions</h2>
+<div className="h-[1px] w-full bg-gray-300"></div>
+
+  </div>
+
+  <h1 className="mt-4 font-bold uppercase tracking-normal text-slate-700 sm:text-lg">Lineups</h1>
+  <div className="mt-4 h-[1px] w-full bg-gray-300"></div>
+
+
+
+  <div className="bg-white rounded-sm shadow-sm mt-3">
+
+
+  </div>
+
+  </div>
 };
 
 export default FixturePage;

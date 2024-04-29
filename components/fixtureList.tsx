@@ -44,7 +44,7 @@ const FixtureList = ({ leagueId }: FixtureListProps) => {
       try {
         const currentDate = new Date().toISOString().split("T")[0];
 
-        const url = `https://api-football-v1.p.rapidapi.com/v3/fixtures/?date=2024-03-30&season=2023&league=${leagueId}`;
+        const url = `https://api-football-v1.p.rapidapi.com/v3/fixtures/?date=2024-04-03&season=2023&league=${leagueId}`;
         const apiKey = process.env.NEXT_PUBLIC_REACT_APP_API_KEY;
 
         const headers: HeadersInit = {
@@ -62,7 +62,7 @@ const FixtureList = ({ leagueId }: FixtureListProps) => {
 
         const response = await fetch(url, options);
         const data: { response: Fixture[] } = await response.json();
-        // console.log(data.response);
+        console.log(data.response);
         const sortedFixtureData = data.response.sort((a, b) =>
           a.fixture.date.localeCompare(b.fixture.date)
         );
@@ -144,7 +144,11 @@ const FixtureList = ({ leagueId }: FixtureListProps) => {
                       } rounded-sm shadow-sm  w-8 font-semibold flex items-center justify-center h-10 sm:font-bold sm:w-10 sm:h-12`}
                     >
                       {fixture.fixture.status.short === "HT" ||
-                      fixture.fixture.status.short === "FT"
+                      fixture.fixture.status.short === "FT" ||
+                      fixture.fixture.status.short === "1H" ||
+                      fixture.fixture.status.short === "2H"
+
+
                         ? fixture.goals.home
                         : "-"}
                     </div>
@@ -156,7 +160,9 @@ const FixtureList = ({ leagueId }: FixtureListProps) => {
                       } rounded-sm shadow-sm  w-8 font-semibold flex items-center justify-center h-10 sm:font-bold sm:w-10 sm:h-12`}
                     >
                       {fixture.fixture.status.short === "HT" ||
-                      fixture.fixture.status.short === "FT"
+                      fixture.fixture.status.short === "FT" ||
+                      fixture.fixture.status.short === "1H" ||
+                      fixture.fixture.status.short === "2H"
                         ? fixture.goals.away
                         : "-"}
                     </div>

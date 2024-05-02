@@ -19,3 +19,17 @@
 
     filter: brightness(0) saturate(100%) invert(87%) sepia(20%) saturate(4156%) hue-rotate(359deg) brightness(103%) contrast(104%);
 }
+
+.customStar1:hover {
+
+    filter: brightness(0) saturate(100%) invert(87%) sepia(20%) saturate(4156%) hue-rotate(359deg) brightness(103%) contrast(104%);
+    opacity: 100%;
+
+}
+
+.bin:hover {
+
+    /* filter: invert(18%) sepia(89%) saturate(7500%) hue-rotate(3deg) brightness(103%) contrast(118%); */
+    /* opacity: 100%; */
+    /* opacity: 100%; */
+}

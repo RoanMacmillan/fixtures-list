@@ -3,13 +3,31 @@ import { useEffect, useState } from "react";
 
 const Todo = () => {
   const [input, setInput] = useState("");
-  const [tasks, setTasks] = useState([
-    { content: "White trainers", completed: false, important: false },
+  const [typeInput, setTypeInput] = useState("");
 
-    { content: "T shirts (white)", completed: false, important: false },
-    { content: "Shorts (stone/blue)", completed: false, important: false },
-    { content: "Linen shirt (black?)", completed: false, important: false },
-    { content: "Belt", completed: false, important: false },
+  const [editingTaskId, setEditingTaskId] = useState(null);
+  const [editedContent, setEditedContent] = useState("");
+
+  const [tasks, setTasks] = useState([
+    {
+      content: "Clean room",
+      completed: false,
+      important: false,
+      context: "Chores",
+    },
+
+    {
+      content: "Play video games",
+      completed: false,
+      important: false,
+      context: "Hobby",
+    },
+    {
+      content: "Cook dinner",
+      completed: false,
+      important: false,
+      context: "Chores",
+    },
   ]);
 
   const handleSubmit = (e) => {
@@ -19,15 +37,48 @@ const Todo = () => {
 
     setTasks([
       ...tasks,
-      { content: input, completed: false, important: false },
+      {
+        content: input,
+        completed: false,
+        important: false,
+        context: typeInput,
+      },
     ]);
     setInput("");
+    setTypeInput("");
+  };
+
+  const handleEdit = (index, currentContent) => {
+    setEditingTaskId(index);
+    setEditedContent(currentContent);
+  };
+
+  const handleSaveEdit = (index) => {
+    const updatedTasks = tasks.map((task, i) => {
+      if (i === index) {
+        return { ...task, content: editedContent };
+      }
+
+      console.log(`This is index: ${index}`)
+
+
+      return task;
+    });
+
+    setTasks(updatedTasks);
+    setEditingTaskId(null);
+    setEditedContent("");
+  };
+
+  const handleInputChange = (event) => {
+    setEditedContent(event.target.value);
   };
 
   const toggleImportant = (index) => {
     const updatedTasks = tasks.map((task, i) => {
       if (i === index) {
         return { ...task, important: !task.important };
+        
       }
 
       return task;
@@ -39,11 +90,15 @@ const Todo = () => {
     ];
 
     setTasks(reorderedTasks);
+    setEditingTaskId(null);
+    
   };
 
   const removeTask = (index) => {
     setTasks(tasks.filter((_, i) => i !== index));
     console.log(`Removed task ${index}`);
+    setEditingTaskId(null);
+
   };
 
   const handleClear = () => {
@@ -61,12 +116,15 @@ const Todo = () => {
       return task;
     });
 
-    const reorderedTasks = [
-      ...updatedTasks.filter((task) => !task.completed),
-      ...updatedTasks.filter((task) => task.completed),
-    ];
+    // const reorderedTasks = [
+    //   ...updatedTasks.filter((task) => !task.completed),
+    //   ...updatedTasks.filter((task) => task.completed),
+    // ];
 
-    setTasks(reorderedTasks);
+    // setTasks(reorderedTasks);
+    setTasks(updatedTasks);
+    setEditingTaskId(null);
+
   };
 
   useEffect(() => {
@@ -84,6 +142,13 @@ const Todo = () => {
           onChange={(e) => setInput(e.target.value)}
           placeholder="Add a new task"
         ></input>
+        <input
+          className={`px-1 shadow-sm rounded-sm`}
+          type="text"
+          value={typeInput}
+          onChange={(e) => setTypeInput(e.target.value)}
+          placeholder="Context"
+        ></input>
         <button
           type="submit"
           disabled={!input.trim()}
@@ -98,11 +163,20 @@ const Todo = () => {
       <ul className="px-1 mt-1 ">
         {tasks.map((task, index) => (
           <div className={``} key={index}>
-            <div className="mt-2 flex flex-row bg-white p-1 shadow-sm">
+            <div className="mt-2 flex flex-row bg-white p-1 relative shadow-sm">
               <div
-                className={` flex  w-full rounded-sm gap-1 cursor-pointer `}
-                onClick={() => toggleComplete(index)}
+                className={` flex items-center  w-full rounded-sm gap-1 cursor-pointer 
+                
+                
+                `}
               >
+
+                <button 
+                onClick={() => toggleComplete(index)}
+                
+                
+                className="absolute w-full top-0 h-full left-0"></button>
+
                 <button className="px-2" type="button">
                   <div
                     className={`${
@@ -118,31 +192,89 @@ const Todo = () => {
                     )}
                   </div>
                 </button>
-                <li
-                  className={` w-full py-1 px-0 ${
-                    task.completed === true ? "opacity-30 line-through  " : ""
-                  }`}
-                >
-                  {task.content}
-                </li>
+
+                {editingTaskId === index ? (
+                  <>
+                    <input
+                      type="text"
+                      className=" px-2 z-50 py-1 bg-sky-50 rounded-md border border-sky-300 focus:outline-none focus:ring focus:ring-blue-300"
+                      value={editedContent}
+                      onChange={handleInputChange}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <li
+                      className={` py-1 px-0 ${
+                        task.completed === true
+                          ? "opacity-30 line-through  "
+                          : ""
+                      }`}
+                    >
+                      {task.content}
+                    </li>
+                  </>
+                )}
+
                 {/* <button className="bg-red-100 min-w-10 sm:hover:bg-red-300 flex items-center justify-center font-semibold text-lg shadow-sm rounded-sm" onClick={() => removeTask(index)}>
 
               <img className="w-5" src='./assets/icons/close.svg' alt='Complete'></img>
               </button> */}
+                <p className="ml-2 text-gray-400 text-sm">{task.context}</p>
               </div>
-              <button
-                className={`px-2 bg-white ${task.completed ? 'pointer-events-none' : ''}`}
-                onClick={() => toggleImportant(index)}
-              >
-                <img
-                  className={`opacity-10 ${
-                    task.important ? "customStar opacity-100" : ""
-                  }
+
+              {editingTaskId === index ? (
+                <>
+                  <button onClick={() => handleSaveEdit(index)}>Save</button>
+                </>
+              ) : (
+                <>
+                  <button
+                    className={`px-2 bg-white`}
+                    onClick={() => handleEdit(index, task.content)}
+                  >
+                    <img
+                      className={`opacity-10 hover:opacity-100
                   
 
                   
                   `}
+                      src="./assets/icons/edit.svg"
+                    ></img>
+                  </button>
+                </>
+              )}
+
+              <button
+                className={`px-2 bg-white ${
+                  task.completed ? "pointer-events-none" : ""
+                }
+                
+                
+                `}
+                onClick={() => toggleImportant(index)}
+              >
+                <img
+                  className={`opacity-10 customStar1 ${
+                    task.important ? "customStar opacity-100" : ""
+                  }
+
+                  `}
                   src="./assets/icons/star.svg"
+                ></img>
+              </button>
+
+              <button
+                className={`px-2 bg-white`}
+                onClick={() => removeTask(index)}
+              >
+                <img
+                  className={`opacity-10 hover:opacity-100
+                  
+
+                  
+                  `}
+                  src="./assets/icons/bin.svg"
                 ></img>
               </button>
             </div>

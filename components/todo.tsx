@@ -163,9 +163,9 @@ const Todo = () => {
       <ul className="px-1 mt-1 ">
         {tasks.map((task, index) => (
           <div className={``} key={index}>
-            <div className="mt-2 flex flex-row bg-white p-1 relative shadow-sm">
+            <div className="mt-2 flex flex-row bg-white p-1  shadow-sm">
               <div
-                className={` flex items-center  w-full rounded-sm gap-1 cursor-pointer 
+                className={` flex items-center  w-full rounded-sm relative gap-1 cursor-pointer 
                 
                 
                 `}
@@ -175,9 +175,9 @@ const Todo = () => {
                 onClick={() => toggleComplete(index)}
                 
                 
-                className="absolute w-full top-0 h-full left-0"></button>
+                className="absolute w-full z-50 top-0 bg-transparent h-full left-0"></button>
 
-                <button className="px-2" type="button">
+                <button className="px-2 " type="button">
                   <div
                     className={`${
                       task.completed ? "bg-sky-500 border-none" : ""
@@ -220,7 +220,7 @@ const Todo = () => {
 
               <img className="w-5" src='./assets/icons/close.svg' alt='Complete'></img>
               </button> */}
-                <p className="ml-2 text-gray-400 text-sm">{task.context}</p>
+                <p className="ml-auto mr-3 text-gray-400 text-xs">{task.context}</p>
               </div>
 
               {editingTaskId === index ? (
@@ -230,11 +230,11 @@ const Todo = () => {
               ) : (
                 <>
                   <button
-                    className={`px-2 bg-white`}
+                    className={`px-2  hover-btn`}
                     onClick={() => handleEdit(index, task.content)}
                   >
                     <img
-                      className={`opacity-10 hover:opacity-100
+                      className={`opacity-10 edit-img
                   
 
                   
@@ -246,7 +246,7 @@ const Todo = () => {
               )}
 
               <button
-                className={`px-2 bg-white ${
+                className={`px-2 bg-white hover-btn2 ${
                   task.completed ? "pointer-events-none" : ""
                 }
                 
@@ -265,11 +265,11 @@ const Todo = () => {
               </button>
 
               <button
-                className={`px-2 bg-white`}
+                className={`px-2 bg-white hover-btn3`}
                 onClick={() => removeTask(index)}
               >
                 <img
-                  className={`opacity-10 hover:opacity-100
+                  className={`opacity-10 bin-hover
                   
 
                   
